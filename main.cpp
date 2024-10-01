@@ -16,5 +16,4 @@ int main(){
     Network N(64);
     N.initialize_layer(16);
     N.initialize_layer(10);
-    N.initialize_weights();
 }

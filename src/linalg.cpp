@@ -1,8 +1,9 @@
 #pragma once
 #include<vector>
+#include <cstdlib>
 
 int randint(int a, int b){
-    return a + (rand() % (b - a));
+    return a + (std::rand() % (b - a));
 }
 
 template<typename T>
@@ -13,6 +14,11 @@ class Matrix
 
     public:
     std::pair<int, int> shape;
+
+    Matrix(){
+        shape.first = 0;
+        shape.second = 0;
+    }
     
     Matrix(int i, int j){
         shape.first = i;
