@@ -42,4 +42,18 @@ class Matrix
             }
         }
     }
+
+    Matrix<T> dot(Matrix<T> other) {
+        if (shape.second != other.shape.first) throw std::invalid_argument("Invalid matrix dimensions");
+        Matrix<T> result(shape.first, other.shape.second);
+        for (int i = 0; i < shape.first; i++){
+            for (int j = 0; j < other.shape.second; j++){
+                result[i][j] = 0;
+                for (int k = 0; k < shape.second; k++) {
+                    result[i][j] += self[i][k] * other.self[k][j];
+                }
+            }
+        }
+        return result;
+    }
 };

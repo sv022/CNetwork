@@ -13,7 +13,12 @@ int main(){
         input.push_back(value);
     }
     
-    Network N(64);
-    N.initialize_layer(16);
-    N.initialize_layer(10);
+    Matrix<double> M1(3, 3);
+    Matrix<double> M2(3, 1);
+    M1.random();
+    M2.random();
+    Matrix<double> M = M1.dot(M2);
+    std::cout << M[0][0] << '\n';
+    std::cout << M[1][0] << '\n';
+    std::cout << M[2][0] << '\n';
 }
