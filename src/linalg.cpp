@@ -11,6 +11,11 @@ double sigmoid(double x){
     return 1 / (1 + exp(x));
 }
 
+double sigmoid_derivative(double x){
+    double activation = sigmoid(x);
+    return activation * (1 - activation);
+}
+
 std::vector<double> sigmoid(std::vector<double> input) {   
     int size = input.size();
     std::vector<double> output(size);

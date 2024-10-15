@@ -45,7 +45,7 @@ class Network
         }
     }
 
-    double Cost(std::vector<double> expected){
+    double сost(std::vector<double> expected){
         std::vector<double> output_layer = get_output();
         if (expected.size() != output_layer.size()) throw std::invalid_argument("Invalid output size");
 
@@ -108,5 +108,14 @@ class Network
 }
 
     private:
-    std::vector<Layer> layers; 
+    std::vector<Layer> layers;
+
+    double node_cost(double result, double expected){
+        double error = result - expected;
+        return error * error;
+    }
+
+    double node_cost_derivative(double result, double expected){
+        return 2 * (result - expected);
+    }
 };
