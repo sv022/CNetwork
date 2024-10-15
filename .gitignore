@@ -1,3 +1,6 @@
 /output
 /.vscode
 *.exe
+*.bin
+test.cpp
+visualisation.py
