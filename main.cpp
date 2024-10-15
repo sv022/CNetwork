@@ -26,5 +26,5 @@ int main(){
         cout << output[i] << ' ';
     }
     cout << '\n';
-    cout << N.Cost(expected);
+    cout << N.cost(expected);
 }
