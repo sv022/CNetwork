@@ -44,6 +44,18 @@ class Network
         }
     }
 
+    double Cost(std::vector<double> expected){
+        std::vector<double> output_layer = get_output();
+        if (expected.size() != output_layer.size()) throw std::invalid_argument("Invalid output size");
+
+        double cost = 0;
+
+        for (int i = 0; i < (int)output_layer.size(); i++) {
+            cost += ((output_layer[i] - expected[i]) * (output_layer[i] - expected[i]));
+        }
+        return cost;
+    }
+
     private:
     std::vector<Layer> layers; 
 };
