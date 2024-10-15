@@ -45,7 +45,7 @@ class Network
         }
     }
 
-    double сost(std::vector<double> expected){
+    double cost(std::vector<double> expected){
         std::vector<double> output_layer = get_output();
         if (expected.size() != output_layer.size()) throw std::invalid_argument("Invalid output size");
 
@@ -56,6 +56,7 @@ class Network
         }
         return cost;
     }
+
 
     void save_weights(std::string file_path) {
         std::ofstream file;
@@ -105,7 +106,7 @@ class Network
     }
 
     infile.close();
-}
+
 
     private:
     std::vector<Layer> layers;
