@@ -2,6 +2,7 @@
 #include<vector>
 #include"linalg.cpp"
 #include"layer.cpp"
+#include <fstream>
 
 class Network 
 {
@@ -56,6 +57,55 @@ class Network
         return cost;
     }
 
+
+    void save_weights(std::string file_path) {
+        std::ofstream file;
+        file.open(file_path, std::ios::binary);
+        for (Layer layer : std::vector<Layer>(layers.begin() + 1, layers.end())) {
+            int layer_size = layer.size;
+            file.write((char*)&layer_size, sizeof(layer_size));
+
+            for (int i = 0; i < layer.weights.shape.first; i++) {
+                for (int j = 0; j < layer.weights.shape.second; j++) {
+                    double weight = layer.weights[i][j];
+                    file.write((char*)&weight, sizeof(weight));
+                }
+            }
+
+            for (int i = 0; i < (int)layer.size; i++) {
+                double bias = layer.biases[i];
+                file.write((char*)&bias, sizeof(bias));
+            }
+        }
+    }
+
+    void load_weights_biases(std::string filepath) {
+    std::ifstream infile(filepath, std::ios::binary);
+
+    if (!infile.is_open()) {
+        throw std::runtime_error("Unable to open file for reading");
+    }
+
+    for (int layer = 1; layer < layers.size(); layer++) {
+        int layer_size = 0;
+        infile.read((char*)&layer_size, sizeof(layer_size));
+
+        for (int i = 0; i < layers[layer].weights.shape.first; i++) {
+            for (int j = 0; j < layers[layer].weights.shape.second; j++) {
+                double weight = 0;
+                infile.read((char*)&weight, sizeof(weight));
+                layers[layer].weights[i][j] = weight;
+            }
+        }
+
+        for (int i = 0; i < layers[layer].size; i++) {
+            double bias = 0;
+            infile.read((char*)&bias, sizeof(bias));
+            layers[layer].biases[i] = bias;
+        }
+    }
+
+    infile.close();
 
 
     private:
