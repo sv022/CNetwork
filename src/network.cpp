@@ -66,8 +66,8 @@ class Network
                 infile.read((char*)&bias, sizeof(bias));
                 layers[layer].biases[i] = bias;
             }
-            infile.close();
         }
+        infile.close();
     }
 
     std::vector<double> get_output(){

@@ -2,6 +2,7 @@
 #include<vector>
 #include<cstdlib>
 #include<math.h>
+#include <stdexcept>
 
 int randint(int a, int b){
     return a + (std::rand() % (b - a));
