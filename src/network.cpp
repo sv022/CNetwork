@@ -84,36 +84,32 @@ class Network
     }
 
     void load_weights_biases(std::string filepath) {
-    std::ifstream infile(filepath, std::ios::binary);
+        std::ifstream infile(filepath, std::ios::binary);
 
-    if (!infile.is_open()) {
-        throw std::runtime_error("Unable to open file for reading");
-    }
+        if (!infile.is_open()) {
+            throw std::runtime_error("Unable to open file for reading");
+        }
 
-    for (int layer = 1; layer < layers.size(); layer++) {
-        int layer_size = 0;
-        infile.read((char*)&layer_size, sizeof(layer_size));
+        for (int layer = 1; layer < layers.size(); layer++) {
+            int layer_size = 0;
+            infile.read((char*)&layer_size, sizeof(layer_size));
 
-        for (int i = 0; i < layers[layer].weights.shape.first; i++) {
-            for (int j = 0; j < layers[layer].weights.shape.second; j++) {
-                double weight = 0;
-                infile.read((char*)&weight, sizeof(weight));
-                layers[layer].weights[i][j] = weight;
+            for (int i = 0; i < layers[layer].weights.shape.first; i++) {
+                for (int j = 0; j < layers[layer].weights.shape.second; j++) {
+                    double weight = 0;
+                    infile.read((char*)&weight, sizeof(weight));
+                    layers[layer].weights[i][j] = weight;
+                }
             }
-        }
 
-        for (int i = 0; i < layers[layer].size; i++) {
-            double bias = 0;
-            infile.read((char*)&bias, sizeof(bias));
-            layers[layer].biases[i] = bias;
+            for (int i = 0; i < layers[layer].size; i++) {
+                double bias = 0;
+                infile.read((char*)&bias, sizeof(bias));
+                layers[layer].biases[i] = bias;
+            }
+            infile.close();
         }
     }
-
-    infile.close();
-
-
-    private:
-    std::vector<Layer> layers;
 
     double node_cost(double result, double expected){
         double error = result - expected;
