@@ -49,7 +49,7 @@ class Network
             throw std::runtime_error("Unable to open file for reading");
         }
 
-        for (int layer = 1; layer < layers.size(); layer++) {
+        for (int layer = 1; layer < (int)layers.size(); layer++) {
             int layer_size = 0;
             infile.read((char*)&layer_size, sizeof(layer_size));
 
@@ -95,7 +95,53 @@ class Network
         }
     }
 
+    void backpropagate(const std::vector<double>& expected_output){
+        // Ошибки на выходном слое
+        Layer& output_layer = layers.back();
+        std::vector<double> output_errors(output_layer.size);
+
+        for (int i = 0; i < output_layer.size; i++) {
+            double output_value = output_layer.get(i);
+            output_errors[i] = (expected_output[i] - output_value) * sigmoid_derivative(output_value);
+        }
+
+        // Ошибки для скрытых слоев
+        for (int layer_num = layers.size() - 2; layer_num >= 0; layer_num--){
+            Layer& current_layer = layers[layer_num];
+            Layer& next_layer = layers[layer_num + 1];
+
+            std::vector<double> layer_errors(current_layer.size);
+            for (int i = 0; i < current_layer.size; i++) {
+                double error = 0.0;
+                for (int j = 0; j < next_layer.size; j++) {
+                    error += next_layer.weights[j][i] * output_errors[j];
+                }
+                layer_errors[i] = error * sigmoid_derivative(current_layer.get(i));
+            }
+
+            // Обновление весов и смещений для следующего слоя
+            for (int i = 0; i < next_layer.size; i++) {
+                for (int j = 0; j < current_layer.size; j++) {
+                    next_layer.weights[i][j] += learning_rate * output_errors[i] * current_layer.get(j);
+                }
+                next_layer.biases[i] += learning_rate * output_errors[i];
+            }
+
+            output_errors = layer_errors; // Переносим ошибки для следующего шага
+        }
+    }
+
+    void train(const std::vector<std::vector<double>>& inputs, const std::vector<std::vector<double>>& outputs, int epochs){
+        for (int epoch = 0; epoch < epochs; epoch++){
+            for (size_t i = 0; i < inputs.size(); i++){
+                forward(inputs[i]);
+                backpropagate(outputs[i]);
+            }
+        }
+    }
+
     private:
+    double learning_rate = 0.1;
     std::vector<Layer> layers;
     
     double cost(std::vector<double> expected){
@@ -108,14 +154,5 @@ class Network
             cost += ((output_layer[i] - expected[i]) * (output_layer[i] - expected[i]));
         }
         return cost;
-    }
-
-    double node_cost(double result, double expected){
-        double error = result - expected;
-        return error * error;
-    }
-
-    double node_cost_derivative(double result, double expected){
-        return 2 * (result - expected);
     }
 };

@@ -4,26 +4,22 @@
 using namespace std;
 
 
-vector<double> input;
-vector<double> expected;
+std::vector<std::vector<double>> inputs = {{0, 0}, {0, 1}, {1, 0}, {1, 1}};
+std::vector<std::vector<double>> expected = {{0}, {1}, {1}, {0}};
 
 int main(){
-    int numinputs = 64;
-    for (int i = 0; i < numinputs; i++){
-        double value = randint(1, 100) / 100;
-        input.push_back(value);
-    }
-    for (int i = 0; i < 10; i++){
-        double value = randint(1, 100) / 100;
-        expected.push_back(value);
-    }
+    int numinputs = 2;
+
     Network N(numinputs);
-    N.initialize_layer(16);
-    N.initialize_layer(10);
-    N.forward(input);
-    vector<double> output = N.get_output();
-    for (int i = 0; i < output.size(); i++){
-        cout << output[i] << ' ';
+    N.initialize_layer(2);
+    N.initialize_layer(1);
+
+    N.train(inputs, expected, 10000);
+
+    for (int i = 0; i < (int)inputs.size(); i++) {
+        N.forward(inputs[i]);
+        vector<double> output = N.get_output();
+        cout << "Input: " << inputs[i][0] << ", " << inputs[i][0] << " -> Output: " << output[0] << '\n';
     }
     cout << '\n';
 }
