@@ -21,47 +21,6 @@ class Network
         layers.push_back(layer);
     }
 
-    std::vector<double> get_output(){
-        std::vector<double> output;
-        int output_index = layers.size() - 1;
-
-        for (int i = 0; i < (int)layers[output_index].size; i++)
-            output.push_back(layers[output_index].get(i));
-        
-        return output;
-    }
-
-    void forward(std::vector<double> input){
-        int input_size = input.size();
-        if (input_size != layers[0].size) return;
-        for (int i = 0; i < input_size; i++){
-            layers[0].set(i, input[i]);
-        }
-        for (int layer_num = 1; layer_num < (int)layers.size(); layer_num++){
-            std::vector<double> layer = layers[layer_num].weights.dot(layers[layer_num - 1].get());
-            for (int i = 0; i < (int)layer.size(); i++) {
-                double value = sigmoid(layer[i] + layers[layer_num].biases[i]);
-                layers[layer_num].set(i, value);
-            }
-        }
-    }
-
-    private:
-    std::vector<Layer> layers;
-    
-    double cost(std::vector<double> expected){
-        std::vector<double> output_layer = get_output();
-        if (expected.size() != output_layer.size()) throw std::invalid_argument("Invalid output size");
-
-        double cost = 0;
-
-        for (int i = 0; i < (int)output_layer.size(); i++) {
-            cost += ((output_layer[i] - expected[i]) * (output_layer[i] - expected[i]));
-        }
-        return cost;
-    }
-
-
     void save_weights(std::string file_path) {
         std::ofstream file;
         file.open(file_path, std::ios::binary);
@@ -109,6 +68,46 @@ class Network
             }
             infile.close();
         }
+    }
+
+    std::vector<double> get_output(){
+        std::vector<double> output;
+        int output_index = layers.size() - 1;
+
+        for (int i = 0; i < (int)layers[output_index].size; i++)
+            output.push_back(layers[output_index].get(i));
+        
+        return output;
+    }
+
+    void forward(std::vector<double> input){
+        int input_size = input.size();
+        if (input_size != layers[0].size) return;
+        for (int i = 0; i < input_size; i++){
+            layers[0].set(i, input[i]);
+        }
+        for (int layer_num = 1; layer_num < (int)layers.size(); layer_num++){
+            std::vector<double> layer = layers[layer_num].weights.dot(layers[layer_num - 1].get());
+            for (int i = 0; i < (int)layer.size(); i++) {
+                double value = sigmoid(layer[i] + layers[layer_num].biases[i]);
+                layers[layer_num].set(i, value);
+            }
+        }
+    }
+
+    private:
+    std::vector<Layer> layers;
+    
+    double cost(std::vector<double> expected){
+        std::vector<double> output_layer = get_output();
+        if (expected.size() != output_layer.size()) throw std::invalid_argument("Invalid output size");
+
+        double cost = 0;
+
+        for (int i = 0; i < (int)output_layer.size(); i++) {
+            cost += ((output_layer[i] - expected[i]) * (output_layer[i] - expected[i]));
+        }
+        return cost;
     }
 
     double node_cost(double result, double expected){
