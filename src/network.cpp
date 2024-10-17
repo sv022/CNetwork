@@ -2,6 +2,7 @@
 #include<vector>
 #include"linalg.cpp"
 #include"layer.cpp"
+#include <stdexcept>
 
 class Network 
 {
@@ -44,6 +45,9 @@ class Network
         }
     }
 
+    private:
+    std::vector<Layer> layers;
+    
     double cost(std::vector<double> expected){
         std::vector<double> output_layer = get_output();
         if (expected.size() != output_layer.size()) throw std::invalid_argument("Invalid output size");
@@ -55,11 +59,6 @@ class Network
         }
         return cost;
     }
-
-
-
-    private:
-    std::vector<Layer> layers;
 
     double node_cost(double result, double expected){
         double error = result - expected;

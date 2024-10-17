@@ -26,5 +26,4 @@ int main(){
         cout << output[i] << ' ';
     }
     cout << '\n';
-    cout << N.cost(expected);
 }
