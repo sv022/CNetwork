@@ -83,7 +83,8 @@ class Matrix
     void random(){
         for (int i = 0; i < shape.first; i++) {
             for (int j = 0; j < shape.second; j++) {
-                self[i][j] = (double)randint(1, 100) / 100;
+                self[i][j] = (double)randint(1, 500) / 100;
+                if (randint(1, 10) % 2 == 0) self[i][j] *= -1;
             }
         }
     }
