@@ -97,14 +97,81 @@ class Network
             }
         }
 
-        for (int i = 0; i < layers[layer].size; i++) {
-            double bias = 0;
-            infile.read((char*)&bias, sizeof(bias));
-            layers[layer].biases[i] = bias;
+            for (int i = 0; i < layers[layer].size; i++) {
+                double bias = 0;
+                infile.read((char*)&bias, sizeof(bias));
+                layers[layer].biases[i] = bias;
+            }
+        }
+        infile.close();
+    }
+
+    std::vector<double> get_output(){
+        std::vector<double> output;
+        int output_index = layers.size() - 1;
+
+        for (int i = 0; i < (int)layers[output_index].size; i++)
+            output.push_back(layers[output_index].get(i));
+        
+        return output;
+    }
+
+    void forward(std::vector<double> input){
+        int input_size = input.size();
+        if (input_size != layers[0].size) return;
+        for (int i = 0; i < input_size; i++){
+            layers[0].set(i, input[i]);
+        }
+        for (int layer_num = 1; layer_num < (int)layers.size(); layer_num++){
+            std::vector<double> layer = layers[layer_num].weights.dot(layers[layer_num - 1].get());
+            for (int i = 0; i < (int)layer.size(); i++) {
+                double value = sigmoid(layer[i] + layers[layer_num].biases[i]);
+                layers[layer_num].set(i, value);
+            }
         }
     }
 
-    infile.close();
+    void backprop(std::vector<double> input, std::vector<double> expected, double learning_rate) {
+    forward(input);
+
+    std::vector<std::vector<double>> activations;
+    std::vector<std::vector<double>> z_values;
+
+    for (Layer& layer : layers) {
+        activations.push_back(layer.get());
+    }
+
+    std::vector<std::vector<double>> delta(layers.size());
+
+    int output_layer = layers.size() - 1;
+    delta[output_layer].resize(layers[output_layer].size);
+
+    for (int i = 0; i < layers[output_layer].size; i++) {
+        double result = activations[output_layer][i];
+        delta[output_layer][i] = node_cost_derivative(result, expected[i]) * sigmoid_derivative(result); 
+    }
+
+    for (int l = output_layer - 1; l > 0; l--) {
+        delta[l].resize(layers[l].size);
+
+        for (int i = 0; i < layers[l].size; i++) {
+            double error = 0.0;
+            for (int j = 0; j < layers[l + 1].size; j++) {
+                error += delta[l + 1][j] * layers[l + 1].weights[j][i];
+            }
+            delta[l][i] = error * sigmoid_derivative(activations[l][i]);
+        }
+    }
+
+    // Step 4: Update weights and biases using the gradients
+    for (int l = 1; l < layers.size(); l++) {
+        for (int i = 0; i < layers[l].size; i++) {
+            layers[l].biases[i] -= learning_rate * delta[l][i];
+            for (int j = 0; j < layers[l - 1].size; j++) {
+                layers[l].weights[i][j] -= learning_rate * delta[l][i] * activations[l - 1][j];
+            }
+        }
+    }
 }
 
     private:
