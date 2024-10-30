@@ -52,7 +52,7 @@ Network::Network(int layer_count, std::vector<int> layers_size) {
 	}
 }
 
-
+// Получить значения выходного слоя
 std::vector<double> Network::getOutput() const {
     std::vector<double> results;
 
@@ -66,6 +66,7 @@ void Network::backProp(const std::vector<double> &targets) {
 	Layer &outputLayer = layers.back();
 	error = 0.0;
 
+	// ошибка на выходном слое
 	for (unsigned n = 0; n < outputLayer.size() - 1; n++) {
 		double delta = targets[n] - outputLayer[n].getOutput();
 		error += delta * delta;
@@ -73,18 +74,21 @@ void Network::backProp(const std::vector<double> &targets) {
 	error /= outputLayer.size() - 1;
 	error = sqrt(error);
 
-	averageError += (averageError * smoothingFactor + error) / (smoothingFactor + 1);
+	// averageError += (averageError * smoothingFactor + error) / (smoothingFactor + 1);
 
+	// Градиент для выходного слоя
 	for (unsigned n = 0; n < outputLayer.size() - 1; n++) {
 		outputLayer[n].calculateOutputGradients(targets[n]);
 	}
-
+	
+	// Градиенты для скрытых слоев
 	for (unsigned layerNum = layers.size() - 2; layerNum > 0; --layerNum) {
 		for (unsigned n = 0; n < layers[layerNum].size(); n++) {
 			layers[layerNum][n].calculateHiddenGradients(layers[layerNum + 1]);
 		}
 	}
 
+	// Обновляем веса
 	for (unsigned layerNum = layers.size() - 1; layerNum > 0; layerNum--) {
 		for (unsigned n = 0; n < layers[layerNum].size() - 1; n++) {
 			layers[layerNum][n].updateWeights(layers[layerNum - 1]);
@@ -109,7 +113,7 @@ void Network::train(std::string filePath, int epochs) {
 
     int iteration = 0;
 	int epoch = 0;
-    bool debug = false;
+    bool debug = true;
 
     if (debug) std::cout << "epoch: " << epoch << std::endl;
 	while (epoch < epochs) {
@@ -144,8 +148,6 @@ void Network::train(std::string filePath, int epochs) {
 
 		if (iteration == file.getMaxIterations()) {
             if (debug) std::cout << '\n' << error / iteration << std::endl;
-			// std::string choice;
-			// std::cin >> choice;
             double error = 0;
 			iteration = 0;
             epoch++;
@@ -154,6 +156,7 @@ void Network::train(std::string filePath, int epochs) {
 	}
 }
 
+// Индекс нейрона с наибольшим выходным значением
 int Network::getMaxActivationIndex(std::vector<double> layerOutputs){
         int maxIndex = -1;
         double maxVal = -1000000;
