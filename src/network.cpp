@@ -14,22 +14,11 @@ private:
 	double error;
 	double averageError;
 	static double smoothingFactor;
-
-    int getMaxActivationIndex(std::vector<double> layerOutputs){
-        int maxIndex = -1;
-        double maxVal = -1000000;
-        for (unsigned i = 0; i < layerOutputs.size(); i++){
-            if (layerOutputs[i] > maxVal) {
-                maxVal = layerOutputs[i];
-                maxIndex = i;
-            }
-        }
-        if (maxIndex == -1) throw std::runtime_error("Incorrent output values.");
-        return maxIndex;
-    }
+	int getMaxActivationIndex(std::vector<double> layerOutputs);
+	
 
 public:
-	Network(const std::vector<unsigned> &layout);
+	Network(int layer_count, std::vector<int> layers_size);
 	void feedForward(const std::vector<double> &inputs);
 	void backProp(const std::vector<double> &targets);
 	std::vector<double> getOutput() const;
@@ -42,6 +31,26 @@ public:
 
 
 double Network::smoothingFactor = 100;
+
+Network::Network(int layer_count, std::vector<int> layers_size) {
+	if (layer_count != layers_size.size()) throw std::runtime_error("Invalid network layout.");
+	layers.reserve(layer_count);
+	error = 0;
+	averageError = 0;
+	for (unsigned l = 0; l < layers_size.size(); l++) {
+
+		layers.push_back(Layer());
+
+		// Проверка на выходной слой
+		unsigned outputAmt = (l == layer_count - 1 ? 0 : layers_size[l + 1]);
+
+		layers.back().reserve(layers_size[l]);
+		for (unsigned n = 0; n <= layers_size[l]; n++)
+			layers.back().push_back(Neuron(outputAmt, n));
+
+		layers.back().back().setOutput(1);
+	}
+}
 
 
 std::vector<double> Network::getOutput() const {
@@ -94,21 +103,6 @@ void Network::feedForward(const std::vector<double> &inputVals) {
 	}
 }
 
-Network::Network(const std::vector<unsigned> &layout) {
-	layers.reserve(layout.size());
-	error = 0;
-	averageError = 0;
-	for (unsigned l = 0; l < layout.size(); l++) {
-		layers.push_back(Layer());
-		unsigned outputAmt = l == layout.size() - 1 ? 0 : layout[l + 1];
-
-		layers.back().reserve(layout[l]);
-		for (unsigned n = 0; n <= layout[l]; n++)
-			layers.back().push_back(Neuron(outputAmt, n));
-
-		layers.back().back().setOutput(1);
-	}
-}
 
 void Network::train(std::string filePath, int epochs) {
 	File file("data.txt");
@@ -159,6 +153,19 @@ void Network::train(std::string filePath, int epochs) {
 		}
 	}
 }
+
+int Network::getMaxActivationIndex(std::vector<double> layerOutputs){
+        int maxIndex = -1;
+        double maxVal = -1000000;
+        for (unsigned i = 0; i < layerOutputs.size(); i++){
+            if (layerOutputs[i] > maxVal) {
+                maxVal = layerOutputs[i];
+                maxIndex = i;
+            }
+        }
+        if (maxIndex == -1) throw std::runtime_error("Incorrent output values.");
+        return maxIndex;
+    } 
 
 int Network::predict(std::vector<double> input){
     feedForward(input);

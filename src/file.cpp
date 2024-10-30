@@ -5,24 +5,6 @@
 #include <sstream>
 
 
-class File {
-	
-private:
-	int MAX_ITERATIONS, DATA_SIZE;
-	std::vector<unsigned> layout;
-	std::vector< std::vector<double> > inputs;
-	std::vector< std::vector<double> > targets;
-
-public:
-	File(const char* filePath);
-	std::vector<double> getInputs(const int index) const { return inputs[index]; };
-	std::vector<double> getTargets(const int index) const { return targets[index]; };
-	std::vector<unsigned> getLayout() const { return layout; };
-	int getMaxIterations() const { return MAX_ITERATIONS; };
-	int getDataSize() const { return DATA_SIZE; };
-
-};
-
 std::vector<std::string> split(std::string str, char c) {
 	std::vector<std::string> array;
 	std::string element = "";
@@ -40,6 +22,25 @@ std::vector<std::string> split(std::string str, char c) {
 	return array;
 }
 
+// Вспомогательный класс для чтения параметров сети и входных данных из файла
+class File {
+	
+private:
+	int MAX_ITERATIONS = 50;
+	int DATA_SIZE;
+	std::vector< std::vector<double> > inputs;
+	std::vector< std::vector<double> > targets;
+
+public:
+	File(const char* filePath);
+	std::vector<double> getInputs(const int index) const { return inputs[index]; };
+	std::vector<double> getTargets(const int index) const { return targets[index]; };
+	int getMaxIterations() const { return MAX_ITERATIONS; };
+	int getDataSize() const { return DATA_SIZE; };
+
+};
+
+
 File::File(const char* filePath) {
 	std::string line;
 	std::vector<std::string> part;
@@ -49,14 +50,7 @@ File::File(const char* filePath) {
 	if (file.is_open()) {
 		int index = 0;
 		while (std::getline(file, line)) {
-			if (index == 0)
-				MAX_ITERATIONS = atoi(line.c_str()); // итераций за эпоху
-			else if (index == 1) {
-				part = split(line, ' ');
-				for (unsigned p = 0; p < part.size(); p++)
-					layout.push_back(atoi(part[p].c_str())); // структура слоев
-			}
-			else if (index % 2 == 0) { // входные данные
+			if (index % 2 == 0) { // входные данные
 				std::vector<double> input;
 				part = split(line, ' ');
 				for (unsigned p = 0; p < part.size(); p++)
