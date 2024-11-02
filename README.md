@@ -40,7 +40,7 @@ int predict(
 ![forward](https://raw.githubusercontent.com/sv022/MockDB/refs/heads/main/CNetwork/forward.png)
 
 [Cоответствующий код](src/network.cpp)
-```
+```cpp
 void Neuron::feedForward(const Layer &prevLayer)
 ```
 <br>
