@@ -15,15 +15,15 @@ private:
 	double averageError;
 	static double smoothingFactor;
 	int getMaxActivationIndex(std::vector<double> layerOutputs);
+	void feedForward(const std::vector<double> &inputs);
+	void backProp(const std::vector<double> &targets);
+	std::vector<double> getOutput() const;
+	std::vector<Layer> getLayers() const { return layers; }
 	
 
 public:
 	Network(int layer_count, std::vector<int> layers_size);
-	void feedForward(const std::vector<double> &inputs);
-	void backProp(const std::vector<double> &targets);
-	std::vector<double> getOutput() const;
 	double getRecentAverageError(void) const { return averageError; }
-	std::vector<Layer> getLayers() const { return layers; }
 	void train(std::string filePath, int epochs);
     int predict(std::vector<double> input);
 
