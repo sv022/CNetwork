@@ -36,6 +36,7 @@ int predict(
 
 ### Прямой проход
 <br>
+
 ![forward](https://raw.githubusercontent.com/sv022/MockDB/refs/heads/main/CNetwork/forward.png)
 
 [Cоответствующий код](src/network.cpp)
@@ -76,7 +77,9 @@ void Neuron::calculateOutputGradients(double target) {
 
 Частные производные для весов скрытых слоев
 <br>
+
 ![forward](https://raw.githubusercontent.com/sv022/MockDB/refs/heads/main/CNetwork/WeightDer.png)
+
 <br>
 
 [Cоответствующий код](src/neuron.cpp)
