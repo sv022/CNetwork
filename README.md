@@ -36,10 +36,11 @@ int predict(
 
 ### Прямой проход
 <br>
+
 ![forward](https://raw.githubusercontent.com/sv022/MockDB/refs/heads/main/CNetwork/forward.png)
 
 [Cоответствующий код](src/network.cpp)
-```
+```cpp
 void Neuron::feedForward(const Layer &prevLayer)
 ```
 <br>
@@ -51,9 +52,11 @@ void Neuron::feedForward(const Layer &prevLayer)
 ![forward](https://raw.githubusercontent.com/sv022/MockDB/refs/heads/main/CNetwork/ErrorFunc.png)
 <br>
 Дельта на выходном слое
+<br>
 ![forward](https://raw.githubusercontent.com/sv022/MockDB/refs/heads/main/CNetwork/OutputDelta.png)
 <br>
 Градиент на выходном слое
+<br>
 ![forward](https://raw.githubusercontent.com/sv022/MockDB/refs/heads/main/CNetwork/OutputGrad.png)
 
 <br>
@@ -76,7 +79,9 @@ void Neuron::calculateOutputGradients(double target) {
 
 Частные производные для весов скрытых слоев
 <br>
+
 ![forward](https://raw.githubusercontent.com/sv022/MockDB/refs/heads/main/CNetwork/WeightDer.png)
+
 <br>
 
 [Cоответствующий код](src/neuron.cpp)
