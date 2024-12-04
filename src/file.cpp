@@ -3,6 +3,7 @@
 #include<string>
 #include<fstream>
 #include <sstream>
+#include <iostream>
 
 
 std::vector<std::string> split(std::string str, char c) {
@@ -32,21 +33,55 @@ private:
 	std::vector< std::vector<double> > targets;
 
 public:
-	File(const char* filePath);
+	File(std::string filePath);
 	std::vector<double> getInputs(const int index) const { return inputs[index]; };
 	std::vector<double> getTargets(const int index) const { return targets[index]; };
 	int getMaxIterations() const { return MAX_ITERATIONS; };
 	int getDataSize() const { return DATA_SIZE; };
 
+	void readFile(std::string filePath);
+
 };
 
 
-File::File(const char* filePath) {
+File::File(std::string dirPath) {
+	std::ifstream files(dirPath + "/files.txt");
+
+	std::string fileName;
+
+	std::string line;
+	std::vector<std::string> part;
+
+	std::vector<std::string> inputFiles;
+
+	while (std::getline(files, fileName)) {
+		std::vector<double> input;
+		std::vector<double> target;
+
+		std::ifstream file(dirPath + "/" + fileName + ".txt");
+		if (!file.is_open()) continue;
+
+		std::getline(file, line);
+
+		part = split(line, ' ');
+		for (unsigned p = 0; p < part.size(); p++)
+			input.push_back(atof(part[p].c_str()));
+		inputs.push_back(input);
+
+		std::getline(file, line);
+		part = split(line, ' ');
+		for (unsigned p = 0; p < part.size(); p++)
+			target.push_back(atof(part[p].c_str()));
+		targets.push_back(target);
+	}
+	// std::cout << inputs.size() << ' ' << targets.size() << '\n';
+}
+
+void File::readFile(std::string filePath) {
 	std::string line;
 	std::vector<std::string> part;
 	std::ifstream file(filePath);
 
-	// чтение параметров из файла
 	if (file.is_open()) {
 		int index = 0;
 		while (std::getline(file, line)) {
