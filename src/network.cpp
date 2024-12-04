@@ -108,8 +108,8 @@ void Network::feedForward(const std::vector<double> &inputVals) {
 }
 
 
-void Network::train(std::string filePath, int epochs) {
-	File file("data.txt");
+void Network::train(std::string dataPath, int epochs) {
+	File file(dataPath);
 
     int iteration = 0;
 	int epoch = 0;
@@ -118,10 +118,12 @@ void Network::train(std::string filePath, int epochs) {
     if (debug) std::cout << "epoch: " << epoch << std::endl;
 	while (epoch < epochs) {
 
-		std::vector<double> inputs = file.getInputs(iteration % file.getDataSize());
+		std::vector<double> inputs = file.getInputs((epoch * 10 + iteration) % file.getDataSize());
 		feedForward(inputs);
 
-		std::vector<double> targets = file.getTargets(iteration % file.getDataSize());
+		std::vector<double> targets = file.getTargets((epoch * 10 + iteration) % file.getDataSize());
+		if (targets.size() == 0) continue;
+
 		backProp(targets);
 
         if (debug) std::cout << "Targets: " << std::flush;
