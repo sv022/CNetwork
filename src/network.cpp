@@ -141,11 +141,10 @@ void Network::train(std::string dataPath, int epochs) {
 		
 
 		std::vector<double> inputs = file.getInputs(index);
-		feedForward(inputs);
-
 		std::vector<double> targets = file.getTargets(index);
 		if (targets.size() == 0 || inputs.size() == 0) continue;
 
+		feedForward(inputs);
 		backProp(targets);
 
         if (debug) std::cout << "Targets: ";
@@ -175,7 +174,7 @@ void Network::train(std::string dataPath, int epochs) {
 			iteration = 0;
 			// usedInputs.clear();
             epoch++;
-            if (debug) std::cout << "epoch: " << epoch << std::endl;
+    		if (debug && epoch < epochs) std::cout << "epoch: " << epoch << std::endl;
 		}
 	}
 }

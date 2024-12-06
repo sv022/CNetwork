@@ -14,7 +14,7 @@ struct Connection {
 class Neuron {
 
 private:
-	const double learningRate = 0.05;
+	const double learningRate = 0.1;
 	const double alpha = 0.1;
 	//static double activate(double value) { return tanh(value); }
 	static double activate(double value) { return 1 / (1 + exp(-value)); }
