@@ -32,7 +32,7 @@ private:
 	std::vector< std::vector<double> > targets;
 
 public:
-	File(const char* filePath);
+	File(std::string filePath);
 	std::vector<double> getInputs(const int index) const { return inputs[index]; };
 	std::vector<double> getTargets(const int index) const { return targets[index]; };
 	int getMaxIterations() const { return MAX_ITERATIONS; };
@@ -41,7 +41,7 @@ public:
 };
 
 
-File::File(const char* filePath) {
+File::File(std::string filePath) {
 	std::string line;
 	std::vector<std::string> part;
 	std::ifstream file(filePath);

@@ -109,7 +109,7 @@ void Network::feedForward(const std::vector<double> &inputVals) {
 
 
 void Network::train(std::string filePath, int epochs) {
-	File file("data.txt");
+	File file(filePath);
 
     int iteration = 0;
 	int epoch = 0;
@@ -118,26 +118,29 @@ void Network::train(std::string filePath, int epochs) {
     if (debug) std::cout << "epoch: " << epoch << std::endl;
 	while (epoch < epochs) {
 
-		std::vector<double> inputs = file.getInputs(iteration % file.getDataSize());
+		int index = iteration % file.getDataSize();
+
+		std::vector<double> inputs = file.getInputs(index);
 		feedForward(inputs);
 
-		std::vector<double> targets = file.getTargets(iteration % file.getDataSize());
+		std::vector<double> targets = file.getTargets(index);
 		backProp(targets);
 
-        if (debug) std::cout << "Targets: " << std::flush;
+        if (debug) std::cout << "Targets: ";
 
         if (debug) {
             for (unsigned i = 0; i < targets.size(); i++)
-                std::cout << targets[i] << " " << std::flush;
+                std::cout << targets[i] << " ";
         }
 
-		if (debug) std::cout << std::endl << "Results: " << std::flush;
+		if (debug) std::cout << "Results: ";
 
 		std::vector<double> results = getOutput();
 
         if (debug) {
             for (unsigned i = 0; i < results.size(); i++)
-                std::cout << results[i] << " " << std::flush;
+                std::cout << results[i] << " ";
+			std::cout << '\n';
         }
 
         for (int i = 0; i < (int)results.size(); i++){
@@ -151,7 +154,7 @@ void Network::train(std::string filePath, int epochs) {
             double error = 0;
 			iteration = 0;
             epoch++;
-            if (debug) std::cout << "epoch: " << epoch << std::endl;
+            if (debug && epoch < epochs) std::cout << "epoch: " << epoch << std::endl;
 		}
 	}
 }
