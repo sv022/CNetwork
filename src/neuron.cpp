@@ -14,8 +14,8 @@ struct Connection {
 class Neuron {
 
 private:
-	const double learningRate = 0.05;
-	const double alpha = 0.1;
+	static double learningRate;
+	static double alpha;
 	//static double activate(double value) { return tanh(value); }
 	static double activate(double value) { return 1 / (1 + exp(-value)); }
 	//static double activateDerivative(double value) { return 1 - tanh(value) * tanh(value); }
@@ -39,6 +39,8 @@ public:
 
 };
 
+double Neuron::learningRate = 0.05;
+double Neuron::alpha = 0.5;
 
 Neuron::Neuron(unsigned outputSize, unsigned index) {
 	this->index = index;
@@ -53,10 +55,10 @@ Neuron::Neuron(unsigned outputSize, unsigned index) {
 void Neuron::updateWeights(Layer &prevLayer) {
 	for (unsigned n = 0; n < prevLayer.size(); n++) {
 
-		// double oldDeltaWeight = prevLayer[n].outputWeights[index].deltaWeight;
-		// double newDeltaWeight = learningRate * prevLayer[n].getOutput() * gradient + alpha * oldDeltaWeight;
+		double oldDeltaWeight = prevLayer[n].outputWeights[index].deltaWeight;
+		double newDeltaWeight = learningRate * prevLayer[n].getOutput() * gradient + alpha * oldDeltaWeight;
 
-		double newDeltaWeight = learningRate * prevLayer[n].getOutput() * gradient;
+		// double newDeltaWeight = learningRate * prevLayer[n].getOutput() * gradient;
 
 		prevLayer[n].outputWeights[index].deltaWeight = newDeltaWeight;
 		prevLayer[n].outputWeights[index].weight += newDeltaWeight;
