@@ -27,7 +27,7 @@ std::vector<std::string> split(std::string str, char c) {
 class File {
 	
 private:
-	int MAX_ITERATIONS = 20;
+	int MAX_ITERATIONS = 10;
 	int DATA_SIZE;
 	std::vector< std::vector<double> > inputs;
 	std::vector< std::vector<double> > targets;
@@ -74,6 +74,8 @@ File::File(std::string dirPath) {
 			target.push_back(atof(part[p].c_str()));
 		targets.push_back(target);
 	}
+
+	DATA_SIZE = inputs.size();
 }
 
 void File::readFile(std::string filePath) {

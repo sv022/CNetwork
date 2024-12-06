@@ -7,6 +7,18 @@
 #include"neuron.cpp"
 
 
+int randint(int a, int b){
+    return a + (std::rand() % (b - a));
+}
+
+bool contains(std::vector<int> a, int value){
+	for (unsigned i = 0; i < a.size(); i++) {
+		if (a[i] == value) return true;
+	}
+	return false;
+}
+
+
 class Network {
 
 private:
@@ -112,46 +124,56 @@ void Network::train(std::string dataPath, int epochs) {
 	File file(dataPath);
 
     int iteration = 0;
-	int epoch = 0;
+	int epoch = 1;
     bool debug = true;
 
     if (debug) std::cout << "epoch: " << epoch << std::endl;
-	while (epoch < epochs) {
+	// std::vector<int> usedInputs;
 
-		std::vector<double> inputs = file.getInputs((epoch * 10 + iteration) % file.getDataSize());
+	while (epoch <= epochs) {
+		// int index = (std::rand() % static_cast<int>(file.getDataSize() + 1));
+		int index = randint(0, file.getDataSize());
+		
+		// while (contains(usedInputs, index)) {
+		// 	index = randint(0, file.getDataSize());
+		// 	if (debug) std::cout << index << ' ';
+		// }
+		
+
+		std::vector<double> inputs = file.getInputs(index);
 		feedForward(inputs);
 
-		std::vector<double> targets = file.getTargets((epoch * 10 + iteration) % file.getDataSize());
-		if (targets.size() == 0) continue;
+		std::vector<double> targets = file.getTargets(index);
+		if (targets.size() == 0 || inputs.size() == 0) continue;
 
 		backProp(targets);
 
-        if (debug) std::cout << "Targets: " << std::flush;
-
+        if (debug) std::cout << "Targets: ";
         if (debug) {
             for (unsigned i = 0; i < targets.size(); i++)
-                std::cout << targets[i] << " " << std::flush;
+                std::cout << targets[i] << " ";
         }
-
-		if (debug) std::cout << std::endl << "Results: " << std::flush;
 
 		std::vector<double> results = getOutput();
 
+		if (debug) std::cout << "Results: ";
         if (debug) {
             for (unsigned i = 0; i < results.size(); i++)
-                std::cout << results[i] << " " << std::flush;
+                std::cout << results[i] << " ";
+			std::cout << '\n';
         }
 
         for (int i = 0; i < (int)results.size(); i++){
             error += (targets[i] - results[i]) * (targets[i] - results[i]) ;
         }
 
+		// usedInputs.push_back(index);
 		iteration++;
 
 		if (iteration == file.getMaxIterations()) {
-            if (debug) std::cout << '\n' << error / iteration << std::endl;
-            double error = 0;
+            if (debug) std::cout << error / iteration << std::endl;
 			iteration = 0;
+			// usedInputs.clear();
             epoch++;
             if (debug) std::cout << "epoch: " << epoch << std::endl;
 		}
