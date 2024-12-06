@@ -39,7 +39,7 @@ public:
 
 };
 
-double Neuron::learningRate = 0.05;
+double Neuron::learningRate = 0.2;
 // double Neuron::alpha = 0.5;
 
 Neuron::Neuron(unsigned outputSize, unsigned index) {
