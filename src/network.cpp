@@ -118,7 +118,8 @@ void Network::train(std::string filePath, int epochs) {
     if (debug) std::cout << "epoch: " << epoch << std::endl;
 	while (epoch < epochs) {
 
-		int index = iteration % file.getDataSize();
+		// int index = (iteration * 100 + std::rand() % 100) % file.getDataSize();
+		int index = std::rand() % file.getDataSize();
 
 		std::vector<double> inputs = file.getInputs(index);
 		feedForward(inputs);
