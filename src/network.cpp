@@ -26,6 +26,7 @@ public:
 	double getRecentAverageError(void) const { return averageError; }
 	void train(std::string filePath, int epochs);
     int predict(std::vector<double> input);
+	double test(std::string filePath, int sampleSize);
 
 };
 
@@ -113,12 +114,13 @@ void Network::train(std::string filePath, int epochs) {
 
     int iteration = 0;
 	int epoch = 0;
-    bool debug = true;
+    bool debug = false;
 
     if (debug) std::cout << "epoch: " << epoch << std::endl;
 	while (epoch < epochs) {
 
-		int index = iteration % file.getDataSize();
+		// int index = (iteration * 100 + std::rand() % 100) % file.getDataSize();
+		int index = std::rand() % file.getDataSize();
 
 		std::vector<double> inputs = file.getInputs(index);
 		feedForward(inputs);
@@ -161,21 +163,41 @@ void Network::train(std::string filePath, int epochs) {
 
 // Индекс нейрона с наибольшим выходным значением
 int Network::getMaxActivationIndex(std::vector<double> layerOutputs){
-        int maxIndex = -1;
-        double maxVal = -1000000;
-        for (unsigned i = 0; i < layerOutputs.size(); i++){
-            if (layerOutputs[i] > maxVal) {
-                maxVal = layerOutputs[i];
-                maxIndex = i;
-            }
-        }
-        if (maxIndex == -1) throw std::runtime_error("Incorrent output values.");
-        return maxIndex;
-    } 
+	int maxIndex = -1;
+	double maxVal = -1000000;
+	for (unsigned i = 0; i < layerOutputs.size(); i++){
+		if (layerOutputs[i] > maxVal) {
+			maxVal = layerOutputs[i];
+			maxIndex = i;
+		}
+	}
+	if (maxIndex == -1) throw std::runtime_error("Incorrent output values.");
+	return maxIndex;
+} 
 
 int Network::predict(std::vector<double> input){
     feedForward(input);
     std::vector<double> output = getOutput();
     int prediction = getMaxActivationIndex(output);
     return prediction;
+}
+
+double Network::test(std::string filePath, int sampleSize) {
+	bool debug = true;
+    File testFile(filePath);
+	int correctGuesses = 0;
+
+	for (unsigned i = 0; i < sampleSize; i++) {
+		int testIndex = std::rand() % testFile.getDataSize();
+		
+		std::vector<double> input = testFile.getInputs(testIndex);
+    	std::vector<double> target = testFile.getTargets(testIndex);
+
+
+		int result = predict(input);
+		if(result == getMaxActivationIndex(target)) correctGuesses++; 
+
+		if (debug) std::cout << getMaxActivationIndex(target) << " guess: " << result << '\n';		
+	}
+	return (double)correctGuesses / sampleSize;
 }
