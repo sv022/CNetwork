@@ -114,7 +114,7 @@ void Network::train(std::string filePath, int epochs) {
 
     int iteration = 0;
 	int epoch = 0;
-    bool debug = true;
+    bool debug = false;
 
     if (debug) std::cout << "epoch: " << epoch << std::endl;
 	while (epoch < epochs) {
@@ -199,5 +199,5 @@ double Network::test(std::string filePath, int sampleSize) {
 
 		if (debug) std::cout << getMaxActivationIndex(target) << " guess: " << result << '\n';		
 	}
-	return correctGuesses / sampleSize;
+	return (double)correctGuesses / sampleSize;
 }

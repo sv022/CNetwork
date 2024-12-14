@@ -8,10 +8,10 @@
 int main() {
 	srand(time(NULL));
     int layers_count = 4;
-    std::vector<int> layers = {1024, 512, 128, 10};
+    std::vector<int> layers = {784, 256, 32, 10};
 
 	Network net(layers_count, layers);
-    net.train("data.txt", 35);
+    net.train("dataFashion.txt", 250);
     
-    std::cout << net.test("data.txt", 10);
+    std::cout << net.test("dataFashion.txt", 20);
 }
