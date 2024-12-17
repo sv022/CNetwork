@@ -51,9 +51,11 @@ void Neuron::feedForward(const Layer &prevLayer)
 ![forward](https://raw.githubusercontent.com/sv022/MockDB/refs/heads/main/CNetwork/ErrorFunc.png)
 <br>
 Дельта на выходном слое
+<br>
 ![forward](https://raw.githubusercontent.com/sv022/MockDB/refs/heads/main/CNetwork/OutputDelta.png)
 <br>
 Градиент на выходном слое
+<br>
 ![forward](https://raw.githubusercontent.com/sv022/MockDB/refs/heads/main/CNetwork/OutputGrad.png)
 
 <br>
