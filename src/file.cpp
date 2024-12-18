@@ -68,5 +68,6 @@ File::File(std::string filePath) {
 		}
 	}
 	DATA_SIZE = inputs.size();
+	MAX_ITERATIONS = DATA_SIZE;
 	file.close();
 }
