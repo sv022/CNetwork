@@ -11,7 +11,7 @@ int main() {
     std::vector<int> layers = {784, 256, 32, 10};
 
 	Network net(layers_count, layers);
-    net.train("dataFashion.txt", 8);
+    net.train("dataFashion.txt", 5);
     
-    std::cout << net.test("dataFashion.txt", 50);
+    std::cout << net.test("dataFashion.txt", 100);
 }

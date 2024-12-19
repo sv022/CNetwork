@@ -55,10 +55,10 @@ Neuron::Neuron(unsigned outputSize, unsigned index) {
 void Neuron::updateWeights(Layer &prevLayer) {
 	for (unsigned n = 0; n < prevLayer.size(); n++) {
 
-		double oldDeltaWeight = prevLayer[n].outputWeights[index].deltaWeight;
-		double newDeltaWeight = learningRate * prevLayer[n].getOutput() * gradient - (alpha * oldDeltaWeight);
+		// double oldDeltaWeight = prevLayer[n].outputWeights[index].deltaWeight;
+		// double newDeltaWeight = learningRate * prevLayer[n].getOutput() * gradient + (alpha * oldDeltaWeight);
 
-		// double newDeltaWeight = learningRate * prevLayer[n].getOutput() * gradient;
+		double newDeltaWeight = learningRate * prevLayer[n].getOutput() * gradient;
 
 		prevLayer[n].outputWeights[index].deltaWeight = newDeltaWeight;
 		prevLayer[n].outputWeights[index].weight += newDeltaWeight;
