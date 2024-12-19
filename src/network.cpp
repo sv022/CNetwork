@@ -3,6 +3,7 @@
 #include<string>
 #include<iostream>
 #include<stdexcept>
+#include<set>
 #include"file.cpp"
 #include"neuron.cpp"
 
@@ -115,12 +116,14 @@ void Network::train(std::string filePath, int epochs) {
     int iteration = 0;
 	int epoch = 0;
     bool debug = false;
+	std::set<int> usedExamples;
 
     if (debug) std::cout << "epoch: " << epoch << std::endl;
 	while (epoch < epochs) {
 
 		// int index = (iteration * 100 + std::rand() % 100) % file.getDataSize();
 		int index = std::rand() % file.getDataSize();
+		while ((bool)usedExamples.count(index)) index = std::rand() % file.getDataSize();
 
 		std::vector<double> inputs = file.getInputs(index);
 		feedForward(inputs);
