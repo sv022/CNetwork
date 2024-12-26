@@ -7,11 +7,11 @@
 
 int main() {
 	srand(time(NULL));
-    int layers_count = 4;
-    std::vector<int> layers = {784, 256, 32, 10};
+    int layers_count = 3;
+    std::vector<int> layers = {784, 256, 10};
 
 	Network net(layers_count, layers);
-    net.train("dataFashion.txt", 5);
+    net.train("data3000.txt", 10);
     
-    std::cout << net.test("dataFashion.txt", 100);
+    std::cout << net.test("data3000.txt", 50);
 }
